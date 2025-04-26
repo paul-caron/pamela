@@ -1,3 +1,5 @@
+// instrumentVoice.js
+
 function createOperatorNode(audioContext){
     const operatorNode = new AudioWorkletNode(
       audioContext,
@@ -8,18 +10,19 @@ function createOperatorNode(audioContext){
 }
 
 class InstrumentVoice{
-    constructor(audioContext,
-        adsr = [
+    constructor(audioContext, settings = {
+        adsr : [
             {a:0.1,d:0.2,s:0.61,r:0.3},
             {a:0.1,d:0.2,s:0.61,r:0.3},
             {a:0.1,d:0.2,s:0.61,r:0.3},
             {a:0.1,d:0.2,s:0.61,r:0.3},
         ],
-        ratio = [1,1,1,1],
-        peakLevel = [1,1,1,1],
-        connect = [{from:1,to:0},], // connections from operator to operator
-        carrier = [1,0,0,0], // output to context destination
-    ){
+        ratio : [1,1,1,1],
+        peakLevel : [1,1,1,1],
+        connect : [{from:1,to:0},], // connections from operator to operator
+        carrier : [1,0,0,0], // output to context destination
+    }){
+        const {adsr, ratio, peakLevel, connect, carrier} = settings;
         this.audioContext = audioContext;
         this.adsr = adsr;
         this.operators = [];
