@@ -1,13 +1,34 @@
 // main.js
 
 let keyPressed = {};
-let voice;
+let voices = [];
+const nVoices = 4;
 
 function start(){
     const audioContext = new AudioContext();
+    // using a custom audio node worklet with phase modulation
     audioContext.audioWorklet.addModule("src/operator.js").then(()=>{
-        voice = new InstrumentVoice(audioContext);
+        for(let i=0; i<nVoices; i++){
+          const voice = new InstrumentVoice(audioContext, brassPad);
+          voices.push(voice);
+        }
     });
+}
+
+// voice allocator for polyphony
+function getVoice(){
+   for(let i = 0 ; i < nVoices; i++){
+       let v = voices[i];
+       if(i.playing === false){
+          voices.splice(i,1); // remove voice
+          voices.push(v); // put voice at back of the queue
+          return v;
+       }
+   }
+   // if all voices are playing, pick first one
+   let v = voices.shift();
+   voices.push(v); // push at back of the queue
+   return v;
 }
 
 
@@ -37,11 +58,14 @@ function keyToFreq(key){
 
 window.addEventListener('keydown', (e)=>{
     if(keyPressed[e.key]) return;
-    keyPressed[e.key] = true;
+    const voice = getVoice();
+    keyPressed[e.key] = voice;
     voice.trigger(keyToFreq(e.key));
 });
 
 window.addEventListener('keyup', (e)=>{
-    keyPressed[e.key] = false;
+    const voice = keyPressed[e.key];
+    if(!voice) return;
     voice.rel();
+    keyPressed[e.key] = null;
 });

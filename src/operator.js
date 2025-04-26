@@ -7,6 +7,7 @@ class OperatorProcessor extends AudioWorkletProcessor {
       { name: 'level', defaultValue: 0, minValue: 0},
       { name: 'peakLevel', defaultValue: 1, minValue: 0},
       { name: 'ratio', defaultValue: 1, minValue: 0},
+      { name: 'detune', defaultValue: 0, minValue: -1200},
     ];
   }
 
@@ -23,14 +24,20 @@ class OperatorProcessor extends AudioWorkletProcessor {
     const level = parameters.level;
     const peakLevel = parameters.peakLevel;
     const ratio = parameters.ratio;
+    const detune = parameters.detune;
 
     for (let i = 0; i < output.length; i++) {
 
       // ratio
       const r = ratio.length > 1 ? ratio[i] : ratio[0];
 
-      // base frequency
-      const f = frequency.length > 1 ? r * frequency[i] : r * frequency[0];
+      // detune
+      const d = detune.length > 1 ? detune[i] : detune[0];
+
+      // frequency
+      let f = frequency.length > 1 ? frequency[i] : frequency[0];
+      f = f * (2 ** (d / 1200));
+      f = f * r;
 
       // modulator input
       let m = 0;

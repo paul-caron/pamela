@@ -18,19 +18,22 @@ class InstrumentVoice{
             {a:0.1,d:0.2,s:0.61,r:0.3},
         ],
         ratio : [1,1,1,1],
+        detune : [0,0,0,0],
         peakLevel : [1,1,1,1],
         connect : [{from:1,to:0},], // connections from operator to operator
         carrier : [1,0,0,0], // output to context destination
     }){
-        const {adsr, ratio, peakLevel, connect, carrier} = settings;
+        const {adsr, ratio, detune, peakLevel, connect, carrier} = settings;
         this.audioContext = audioContext;
         this.adsr = adsr;
         this.operators = [];
         for(let i=0;i<4;i++){
             const operator = createOperatorNode(this.audioContext);
             const r = ratio[i];
+            const d = detune[i];
             const p = peakLevel[i];
             operator.parameters.get('ratio').setValueAtTime(r, this.audioContext.currentTime);
+            operator.parameters.get('detune').setValueAtTime(d, this.audioContext.currentTime);
             operator.parameters.get('peakLevel').setValueAtTime(p, this.audioContext.currentTime);
             this.operators.push(operator);
         }
