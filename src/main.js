@@ -10,6 +10,7 @@ function start(){
     audioContext.audioWorklet.addModule("src/operator.js").then(()=>{
         for(let i=0; i<nVoices; i++){
           const voice = new InstrumentVoice(audioContext, brassPad);
+//          const voice = new InstrumentVoice(audioContext, bass);
           voices.push(voice);
         }
     });

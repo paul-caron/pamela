@@ -1,6 +1,6 @@
 // presets.js
 
-// example of an instrument settings
+// example of an instrument presets settings
 const defaultInstrument = {
     // adsr envelopes of each operators
     adsr : [
@@ -24,11 +24,26 @@ const brassPad = {
         {a:0.2,d:0.4,s:0.7,r:2},
         {a:0.25,d:0.45,s:0.7,r:2},
     ],
-    ratio : [1,1,1,1],
+    ratio : [1,1,1,2],
     detune : [0,5,10,-10],
     peakLevel : [0.15,0.3,0.10,0.3],
     connect : [{from:1,to:0},{from:3,to:2}],
     carrier : [1,0,1,0],
+    feedback : 0.4,
+}
+
+const bass = {
+    adsr : [
+        {a:0.05,d:0.4,s:1,r:0.4},
+        {a:0.05,d:0.4,s:1,r:0.4},
+        {a:0.05,d:0.4,s:1,r:0.4},
+        {a:0.05,d:0.4,s:1,r:0.4},
+    ],
+    ratio : [1,0.5,0.5,0.25],
+    detune : [0,5,10,-10],
+    peakLevel : [0.15,0.3,0.10,0.3],
+    connect : [{from:3,to:2},{from:2,to:0}],
+    carrier : [1,0,0,0],
     feedback : 0.4,
 }
 
