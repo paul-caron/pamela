@@ -2,7 +2,7 @@
 
 let keyPressed = {};
 let voices = [];
-const nVoices = 4;
+const nVoices = 8;
 
 function start(){
     const audioContext = new AudioContext();

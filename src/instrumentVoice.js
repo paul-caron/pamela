@@ -22,8 +22,9 @@ class InstrumentVoice{
         peakLevel : [1,1,1,1],
         connect : [{from:1,to:0},], // connections from operator to operator
         carrier : [1,0,0,0], // output to context destination
+        feedback : 0, // amount of self feedback for last operator
     }){
-        const {adsr, ratio, detune, peakLevel, connect, carrier} = settings;
+        const {adsr, ratio, detune, peakLevel, connect, carrier, feedback} = settings;
         this.audioContext = audioContext;
         this.adsr = adsr;
         this.operators = [];
@@ -40,10 +41,21 @@ class InstrumentVoice{
         connect.forEach(connection => {
             this.operators[connection.from].connect(this.operators[connection.to]);
         });
-        carrier.forEach(i => {
-            this.operators[i].connect(this.audioContext.destination);
+        carrier.forEach((isOutput,i) => {
+            if(isOutput){
+                this.operators[i].connect(this.audioContext.destination);
+            }
         });
+        // last operator feedback loop setup
+        this.feedbackGain = this.audioContext.createGain();
+        this.feedbackGain.gain.setValueAtTime(feedback, this.audioContext.currentTime);
+        this.feedbackDelay = this.audioContext.createDelay();
+        this.feedbackDelay.delayTime.setValueAtTime(0.0001, this.audioContext.currentTime);
+        this.operators[3].connect(this.feedbackDelay);
+        this.feedbackDelay.connect(this.feedbackGain);
+        this.feedbackGain.connect(this.operators[3]);
     }
+    // trigger the envelope and change pitch
     trigger(frequency){
         this.operators.forEach((o,i)=>{
             o.parameters.get('frequency').setValueAtTime(frequency , this.audioContext.currentTime);
@@ -53,6 +65,7 @@ class InstrumentVoice{
             o.parameters.get('level').linearRampToValueAtTime(this.adsr[i].s , this.audioContext.currentTime + this.adsr[i].a + this.adsr[i].d);
         });
     }
+    // release the envelope
     rel(){
         this.operators.forEach((o,i)=>{
             o.parameters.get('level').cancelScheduledValues(this.audioContext.currentTime);
