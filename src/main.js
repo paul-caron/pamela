@@ -2,17 +2,23 @@
 
 let keyPressed = {};
 let voices = [];
-const nVoices = 8;
+const nVoices = 4; //voices per instruments
+const instruments = [];
+const presets = [brassPad, bass, snare, kick];
 
 function start(){
     const audioContext = new AudioContext();
     // using a custom audio node worklet with phase modulation
     audioContext.audioWorklet.addModule("src/operator.js").then(()=>{
-        for(let i=0; i<nVoices; i++){
-          const voice = new InstrumentVoice(audioContext, brassPad);
-//          const voice = new InstrumentVoice(audioContext, bass);
-          voices.push(voice);
-        }
+        presets.forEach(p=>{
+            const presetVoices = [];
+            for(let i=0; i<nVoices; i++){
+              const voice = new InstrumentVoice(audioContext, p);
+              presetVoices.push(voice);
+            }
+            instruments.push(presetVoices);
+        });
+        voices = instruments[0];
     });
 }
 
@@ -59,6 +65,10 @@ function keyToFreq(key){
 
 window.addEventListener('keydown', (e)=>{
     if(keyPressed[e.key]) return;
+    if(!isNaN(e.key)){
+        voices = instruments[e.key - 1];
+        return;
+    }
     const voice = getVoice();
     keyPressed[e.key] = voice;
     voice.trigger(keyToFreq(e.key));
