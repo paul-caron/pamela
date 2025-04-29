@@ -24,12 +24,12 @@ const brassPad = {
         {a:0.2,d:0.4,s:0.7,r:2},
         {a:0.25,d:0.45,s:0.7,r:2},
     ],
-    ratio : [1,1,1,2],
+    ratio : [1,1,1,1],
     detune : [0,5,10,-10],
-    peakLevel : [0.2,0.3,0.2,0.3],
+    peakLevel : [0.1,0.3,0.1,0.3],
     connect : [{from:1,to:0},{from:3,to:2}],
     carrier : [1,0,1,0],
-    feedback : 0.4,
+    feedback : 0.5,
 }
 
 const bass = {
@@ -39,12 +39,12 @@ const bass = {
         {a:0.2,d:0.3,s:0,r:0.0},
         {a:0.2,d:0.3,s:0,r:0.0},
     ],
-    ratio : [0.5,0.25,0.25,0.5],
+    ratio : [1,0.5,0.5,1],
     detune : [0,0,0,0],
     peakLevel : [0.3,0.3,0.3,0.3],
     connect : [{from:3,to:2},{from:2,to:0}],
     carrier : [1,0,0,0],
-    feedback : 0.8,
+    feedback : 0.5,
 }
 
 const snare = {
@@ -71,7 +71,7 @@ const kick = {
     ],
     ratio : [0.5,0.25,0.25,0.25],
     detune : [0,0,0,0],
-    peakLevel : [0.5,0.3,0.3,0.4],
+    peakLevel : [0.7,0.3,0.3,0.4],
     connect : [{from:3,to:2},{from:2,to:0}],
     carrier : [1,0,0,0],
     feedback : 0.5,
